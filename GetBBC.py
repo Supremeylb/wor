@@ -28,7 +28,6 @@ base_url = "http://www.bbc.co.uk/learningenglish/english/features/6-minute-engli
 html = "<div class='widget-pagelink-download-inner bbcle-download-linkparent-extension-mp3'><a class='download bbcle-download-extension-mp3' href='http://downloads.bbc.co.uk/learningenglish/features/6min/180719_6min_english_technochauvinism_download.mp3'><span data-i18n-message-id='Download Audio' class='not-translated _bbcle_translate_wrapper' lang='en'>Download Audio</span></a></div>"
 final_url = "http://downloads.bbc.co.uk/learningenglish/features/6min/180719_6min_english_technochauvinism_download.mp3"
 
-
 def _get_file_md5(file_path):
     m = hashlib.md5()
 
@@ -46,16 +45,23 @@ def get_cur_time(time_fmt="%y%m%d"):
     return time.strftime(time_fmt)
 
 
-def _download_file(url, folder=None, filename=None, filemd5="", log=None):
+def _download_file(url, folder=None, filename=None, filemd5="", log=None, suffix=".mp3"):
     if not folder:
-
+        for di in ["data", get_cur_time()]:
+            path = os.path.join(os.getcwd(), di)
+            if not os.path.exists(path):
+                os.mkdir(path)
+            os.chdir(path)
+        folder = os.getcwd()
+    if not filename:
+        filename = get_cur_time() + suffix
     rtn = download_file(url, folder, filename, filemd5, log)
     if rtn == 0:
         raise Exception("Download file %s failed, try again later." % url)
     return rtn
 
 
-def download_file(url, folder, filename, filemd5="", d_log=None, checkmd5=False, wget_f=False):
+def download_file(url, folder, filename, filemd5="", d_log=None, checkmd5=False, wget_f=True):
     if not d_log:
         d_log = log
 
@@ -117,13 +123,13 @@ def if_update(time=None):
     if date_time.weekday() == 4:
         return True
 
-
 class downBBC(object):
     def __init__(self, time=None, type="mp3"):
         self.type = type
         self.time = time
         self.bs4 = BeautifulSoup(html)
         # self.bs4 = BeautifulSoup(urllib2.urlopen(base_url).read())
+
 
     def get_url(self):
         """
@@ -139,9 +145,10 @@ class testBs4(object):
         self.bs4 = BeautifulSoup(html, features="html5lib")
 
     def test(self):
-        log.info("Let's begin")
+        return "a"
+
 
 
 if __name__ == '__main__':
     zeze = testBs4()
-    _download_file(final_url, )
+    _download_file(final_url)
