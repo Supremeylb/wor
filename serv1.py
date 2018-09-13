@@ -41,7 +41,7 @@ if __name__ == '__main__':
                 else:
                     output_list.remove(sendobj)
 
-            except ConnectionResetError:
+            except Exception as e:
                 del message_queue[sendobj]
                 output_list.remove(sendobj)
                 print("\n[output] Client  {0} disconnected".format(addr))

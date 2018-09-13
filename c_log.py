@@ -5,19 +5,15 @@ import os
 
 def init_log(handle_name, file_name="", debug=False, rotate="size", count=5):
     """
-    New logger rotate
-    @param handle_name: The logger name, and log file name as default.
-    @param file_name: The log file path, set as handle_name as default if it's empty.
-    @param debug: Logging debug information.
     @param rotate: Log file rotate by 'date' or 'size'.
     """
     create_file = True
-    log = CeresonLog(create_file, handle_name, file_name,
+    log = HandyLog(create_file, handle_name, file_name,
                      debug, rotate, count=count)
     return log
 
 
-class CeresonLog(object):
+class HandyLog(object):
 
     def __init__(self, create_file, handle_name, file_name="", debug=False, rotate="size", level=logging.DEBUG,
                  count=30):
@@ -57,7 +53,6 @@ class CeresonLog(object):
                     self.log.addHandler(rotate_handle)
                 if debug:
                     ch = logging.StreamHandler()
-                    # chf = logging.Formatter('%(levelname)-8s %(message)s')
                     ch.setFormatter(formatter)
                     self.log.addHandler(ch)
                     self.log.setLevel(logging.DEBUG)
